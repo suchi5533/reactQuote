@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import './components/home/home';
+import './style.css';
+import { useState, useEffect } from "react";
+
+function getRandomQuote(quotes) {
+  return quotes[Math.floor(Math.random() * quotes.length)];
+}
+
+export default function App() {
+  const [quotes, setQuotes] = useState([]);
+  const [quote, setQuote] = useState(null);
+
+  useEffect(() => {
+    fetch("https://type.fit/api/quotes")
+      .then((res) => res.json())
+      .then((json) => {
+        setQuotes(json);
+        setQuote(json[0]);
+      });
+  }, []);
+
+  function getNewQuote() {
+    setQuote(getRandomQuote(quotes));
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <main>
+      <h1>Project 3: Quote Generator</h1>
+      <section>
+        <button onClick={getNewQuote}>New Quote</button>
+        <h3>
+          <span>“</span>
+          {quote?.text}
+        </h3>
+        <i>- {quote?.author}</i>
+      </section>
+      </main>
+      <h2>this is second head</h2>
+      <home/>
+      <h2> this is footer</h2>
+      
+    </>
   );
 }
 
-export default App;
